@@ -1,0 +1,27 @@
+# Core ML/AI libraries
+torch
+transformers
+sentence-transformers
+datasets
+evaluate
+
+# Data processing
+numpy
+pandas
+scikit-learn
+
+# NLP & Embeddings
+gensim
+
+# LLM integrations
+openai
+langchain-core
+
+# Visualization
+matplotlib
+
+# Utilities
+tqdm
+pyyaml
+
+
