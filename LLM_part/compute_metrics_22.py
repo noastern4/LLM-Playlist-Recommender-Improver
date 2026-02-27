@@ -107,8 +107,8 @@ def load_generated_data(json_file):
 
 def main():
     # File paths
-    items_csv = "/data/csvs/items.csv"
-    tracks_csv = "/data/csvs/tracks.csv"
+    items_csv = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/items.csv"
+    tracks_csv = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/tracks.csv"
     json_file = "Json_file/Five_shot_22_song.json"
 
     generated_data = load_generated_data(json_file)

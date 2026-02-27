@@ -8,8 +8,8 @@ import json
 from os import listdir, path
 
 # Definit input and output paths
-input_dir = '/data/million_playlist_dataset'
-output_dir = '/data/playlist_continuation_data/csvs'
+input_dir = '/home/noama1/.cache/kagglehub/datasets/himanshuwagh/spotify-million/versions/1/data'
+output_dir = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output'
 os.makedirs(output_dir, exist_ok=True)#create a new directory to store csv files
 
 # Open files in writing mode

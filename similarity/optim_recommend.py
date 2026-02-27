@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 from collections import Counter
 import csv
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import math
 from gensim.models import KeyedVectors
 import numpy as np
@@ -19,8 +19,8 @@ import numpy as np
 ##########################
 
 def load_fine_tuned_model(model_dir, base_model_name='sentence-transformers/all-MiniLM-L6-v2'):
-    tokenizer = AutoTokenizer.from_pretrained(base_model_name)
-    model = AutoModel.from_pretrained(model_dir)
+    tokenizer = AutoTokenizer.from_pretrained(model_dir)
+    model = AutoModelForSequenceClassification.from_pretrained(model_dir, output_hidden_states=True)
     model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -33,8 +33,8 @@ def load_fine_tuned_model(model_dir, base_model_name='sentence-transformers/all-
 def get_playlist_embedding(playlist_name, tokenizer, model):
     with torch.no_grad():
         inputs = tokenizer(playlist_name, return_tensors='pt', truncation=True, padding=True).to(model.device)
-        outputs = model(**inputs)
-        last_hidden = outputs.last_hidden_state
+        outputs = model(**inputs, output_hidden_states=True, return_dict=True)
+        last_hidden = outputs.hidden_states[-1]
         embedding = last_hidden.mean(dim=1).squeeze().cpu().numpy()
     return embedding
 
@@ -170,11 +170,11 @@ def compute_metrics(recommended_songs, relevant_songs, top_n=10):
 ########################################
 
 def main():
-    model_dir = "/home/vellard/playlist_continuation/fine_tuned_model_no_scheduler_2"
-    playlist_embeddings_file = "/home/vellard/playlist_continuation/playlists_embeddings/final_embeddings/playlists_embeddings_scheduler.pkl"
-    items_csv = "/data/csvs/items.csv"
-    tracks_csv = "/data/csvs/tracks.csv"
-    playlists_csv = "/data/csvs/playlists.csv"
+    model_dir = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/models/baseline_model"
+    playlist_embeddings_file = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/embeddings/playlists_embeddings.pkl"
+    items_csv = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/items.csv"
+    tracks_csv = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/tracks.csv"
+    playlists_csv = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/playlists.csv"
 
     tokenizer, model = load_fine_tuned_model(model_dir)
     print("Loaded tokenizer & fine-tuned model successfully.")

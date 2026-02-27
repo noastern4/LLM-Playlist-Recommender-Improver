@@ -52,14 +52,16 @@ def compute_track_embeddings(model, playlist_tracks):
 def compute_playlist_embeddings(playlist_tracks, track_embeddings):
     playlist_embeddings = {}
     for pid, tracks in tqdm(playlist_tracks.items(), desc="Processing playlists", unit="playlist"):
-        final_embedding = np.mean(track_embeddings[track], axis=0)
-        playlist_embeddings[pid] = final_embedding
+        track_embs = [track_embeddings[track] for track in tracks if track in track_embeddings]
+        if track_embs:
+            final_embedding = np.mean(track_embs, axis=0)
+            playlist_embeddings[pid] = final_embedding
     return playlist_embeddings
 
 def main():
-    base_dir = "/data/playlist_continuation_data/csvs"
-    tracks_file = "/data/playlist_continuation_data/csvs/tracks.csv"
-    output_dir = "/home/vellard/playlist_continuation/embeddings"
+    base_dir = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output"
+    tracks_file = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/tracks.csv"
+    output_dir = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/embeddings"
     playlist_file = os.path.join(base_dir, f"playlists.csv")
     output_file = os.path.join(output_dir, f"embeddings.pkl")
     items_file = os.path.join(base_dir, f"items.csv")

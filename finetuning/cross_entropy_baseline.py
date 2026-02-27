@@ -2,15 +2,15 @@ import pandas as pd
 import evaluate
 import json
 from datasets import Dataset
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer, EarlyStoppingCallback
 
-# Parameters
+# Parameters — identical to the paper
 MODEL_NAME = 'sentence-transformers/all-MiniLM-L6-v2'
 train_csv = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters/clusters_train.csv'
 val_csv = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters/clusters_val.csv'
-output_dir = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/models/fine_tuned_model'
+output_dir = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/models/baseline_model'
 batch_size = 8
-epochs = 70  # Full training run
+epochs = 100
 learning_rate = 2e-5
 warmup_steps = 100
 
@@ -36,15 +36,7 @@ train_dataset = Dataset.from_pandas(train_df[['Playlist Title', 'Mapped Label']]
 val_dataset = Dataset.from_pandas(val_df[['Playlist Title', 'Mapped Label']])
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-# Load from checkpoint if exists, otherwise from pretrained
-checkpoint_path = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/models/fine_tuned_model/checkpoint-1479200'
-try:
-    model = AutoModelForSequenceClassification.from_pretrained(checkpoint_path, num_labels=num_labels)
-    print(f"Loaded model from checkpoint: {checkpoint_path}")
-except:
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=num_labels)
-    print(f"Loaded base model: {MODEL_NAME}")
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=num_labels)
 
 def tokenize_function(examples):
     texts = [str(text) for text in examples["Playlist Title"]]
@@ -72,7 +64,8 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="accuracy",
     warmup_steps=warmup_steps,
-    logging_strategy="epoch"
+    logging_strategy="epoch",
+    save_total_limit=2   
 )
 
 metric = evaluate.load("accuracy")
@@ -88,10 +81,9 @@ trainer = Trainer(
     train_dataset=tokenized_train,
     eval_dataset=tokenized_val,
     compute_metrics=compute_metrics,
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=5)],
 )
 
-
-# Continue training with model weights from checkpoint (optimizer restarts)
 trainer.train()
 
 trainer.save_model(output_dir)
@@ -101,12 +93,8 @@ tokenizer.save_pretrained(output_dir)
 with open(f"{output_dir}/trainer_metrics.json", "w") as f:
     json.dump(trainer.state.log_history, f, indent=4)
 
+# Save label mapping for later use
+with open(f"{output_dir}/label_mapping.json", "w") as f:
+    json.dump({str(k): v for k, v in label_mapping.items()}, f, indent=4)
+
 print(f"Fine-tuned model saved to {output_dir}")
-
-
-
-
-
-
-
-

@@ -1,0 +1,44 @@
+======================================================================
+  PLAYLIST RECOMMENDER — BASELINE vs IMPROVED
+======================================================================
+  Baseline playlists: 10457
+  Improved playlists: 10457
+  Generated: 2026-02-27 16:58:44
+──────────────────────────────────────────────────────────────────────
+  Hyperparameters (Optuna-optimized)
+    alpha (relevance):  0.4145
+    beta  (diversity):  0.5727
+    gamma (novelty):    0.0128
+    objective formula:  NDCG@10 + 0.2 * intra_list_diversity
+    objective value:    0.537832
+    trials run:         100
+    sample size:        1000 playlists
+======================================================================
+
+Metric                     Category        Baseline    Improved       Delta  Verdict
+────────────────────────────────────────────────────────────────────────────────
+  Precision@10             Relevance         0.0149      0.0111     -0.0038   ↓ ✗
+  Recall@10                Relevance         0.0075      0.0053     -0.0022   ↓ ✗
+  NDCG@10                  Relevance         0.0434      0.0381     -0.0054   ↓ ✗
+  MRR@10                   Relevance         0.0347      0.0309     -0.0037   ↓ ✗
+  R-Precision              Relevance         0.0093      0.0071     -0.0022   ↓ ✗
+  HIT@10                   Relevance         0.0163      0.0121     -0.0042   ↓ ✗
+
+  intra_list_diversity     Diversity         0.6069      0.8344     +0.2275   ↑ ✓
+
+  avg_popularity           Novelty           0.1716      0.1588     -0.0129   ↓ ✓
+
+  genre_diversity          Diversity         1.0000      1.0000     +0.0000   ─
+
+  catalog_coverage         Coverage          0.0383      0.0400     +0.0017   ↑ ✓
+
+────────────────────────────────────────────────────────────────────────────────
+  Note: Relevance metrics may decrease slightly — this is expected.
+  The re-ranker trades a small relevance loss for significant
+  diversity and novelty gains.
+======================================================================
+
+Per-cluster NDCG@10 comparison:
+  Cluster      Baseline   Improved      Delta
+  ────────────────────────────────────────
+  0              0.0434     0.0381    -0.0054

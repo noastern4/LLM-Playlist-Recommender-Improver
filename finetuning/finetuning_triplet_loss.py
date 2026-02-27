@@ -9,11 +9,11 @@ from tqdm.auto import tqdm
 
 # Parameters
 MODEL_NAME = 'sentence-transformers/all-MiniLM-L6-v2'
-train_csv = '/home/vellard/playlist_continuation/clusters_train.csv'
-val_csv = '/home/vellard/playlist_continuation/clusters_val.csv'
-output_dir = './final_triplet_model'
+train_csv = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters/clusters_train.csv'
+val_csv = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters/clusters_val.csv'
+output_dir = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/models/triplet_model'
 batch_size = 8
-epochs = 50
+epochs = 70  # Set to 1 for testing, increase later (e.g., 10-20)
 learning_rate = 2e-5
 
 #transformation in dataframes

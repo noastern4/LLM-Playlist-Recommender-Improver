@@ -51,3 +51,41 @@ Thumbs.db
 
 # Logs
 *.log
+
+
+# --- AI & IDE Tools ---
+.claude/
+wandb/
+command.txt
+
+# --- Data & Metadata ---
+# Large datasets and generated outputs should stay local
+data/clusters/
+data/output/
+new_data_set/
+*.csv
+*.json
+!data/config_template.json  # Example: exclude if you have a template file
+
+# --- Model Artifacts ---
+# Checkpoints and final models are usually too large for Git
+checkpoints/
+models/
+
+# --- Logs & Cluster Scripts ---
+# Slurm/HPC error logs and temporary execution scripts
+finetuning/*.err
+finetuning/*.out
+
+# --- Scratchpad / Temporary Files ---
+# Single-letter scripts or experiment-specific files
+p.py
+NEXT_STEPS.md
+
+# --- Folders (If they contain heavy data/outputs) ---
+# If these folders contain code you want to keep, don't ignore them.
+# If they contain data, keep them ignored.
+spotify/
+spotify_replace/
+reranking/
+thirtymusic_eval/

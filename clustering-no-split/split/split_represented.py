@@ -8,8 +8,8 @@ from tqdm import tqdm
 random.seed(1)
 
 # Paths and files
-input_dir = '/home/vellard/playlist_continuation/clustering-no-split/clean/200/'
-output_dir = '/home/vellard/playlist_continuation/clustering-no-split/split/represented/'
+input_dir = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters/clean/'
+output_dir = '/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters/'
 os.makedirs(output_dir, exist_ok=True)
 input_clusters_file = path.join(input_dir, 'clusters_with_exact_matches.csv')
 output_clusters_train = path.join(output_dir, 'clusters_train.csv')

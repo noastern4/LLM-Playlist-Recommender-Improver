@@ -16,12 +16,16 @@ from tqdm import tqdm
 #Apply K-means and write the clusters in a csv file
 
 def cluster_playlists(playlist_embeddings, num_clusters, playlist_titles, playlist_tracks, output_file):
+    print("Converting embeddings to matrix...")
     embedding_matrix = np.array(list(playlist_embeddings.values()))
     pids = list(playlist_embeddings.keys())
+    print(f"Matrix shape: {embedding_matrix.shape}")
 
     #K-means algorithm (pre-existing fucnctions)
-    kmeans = KMeans(n_clusters=num_clusters, random_state=0, n_init='auto')
+    print(f"Running K-means with {num_clusters} clusters (this takes a while)...")
+    kmeans = KMeans(n_clusters=num_clusters, random_state=0, n_init='auto', verbose=1)
     cluster_labels = kmeans.fit_predict(embedding_matrix) #No PCA
+    print("K-means complete!")
 
     #csv file
     with open(output_file, 'w', newline='', encoding='utf8') as f:
@@ -31,15 +35,17 @@ def cluster_playlists(playlist_embeddings, num_clusters, playlist_titles, playli
             writer.writerow([label, pid, playlist_titles.get(pid, ""), ";".join(playlist_tracks.get(pid, []))])
 
 def main():
-    embeddings_dir = "/home/vellard/playlist_continuation/embeddings"
-    output_dir = "/home/vellard/playlist_continuation/clustering-no-split/clusters/200"
+    embeddings_dir = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/embeddings"
+    output_dir = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/clusters"
     os.makedirs(output_dir, exist_ok=True)
 
     embeddings_file = os.path.join(embeddings_dir, f"embeddings.pkl")
     output_file = os.path.join(output_dir, f"clusters.csv")
 
+    print(f"Loading embeddings from {embeddings_file}...")
     with open(embeddings_file, 'rb') as f:
         data = pickle.load(f)
+    print("Embeddings loaded!")
 
     playlist_embeddings = data["playlist_embeddings"]
     playlist_titles = data["playlist_titles"]

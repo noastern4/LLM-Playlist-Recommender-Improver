@@ -70,10 +70,10 @@ def compute_and_save_playlist_embeddings(playlists_csv, output_file, tokenizer, 
 ##################
 
 def main():
-    playlists_csv = "/data/csvs/playlists.csv"
-    output_file = "/home/vellard/playlist_continuation/playlists_embeddings/final_embeddings/playlists_embeddings_scheduler.pkl"
-    # Choose the  model directory
-    finetuned_model_dir = "/home/vellard/playlist_continuation/fine_tuned_model_no_scheduler_2"
+    playlists_csv = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/output/playlists.csv"
+    output_file = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/data/embeddings/playlists_embeddings.pkl"
+    # Choose the model directory
+    finetuned_model_dir = "/home/noama1/recomendation_system/LLM-Playlist-Recommender-Improver/models/baseline_model"
 
     tokenizer, model, device = load_fine_tuned_model(finetuned_model_dir)
     print("Loaded fine-tuned classification model (with updated weights).")
